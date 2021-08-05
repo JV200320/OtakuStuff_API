@@ -1,3 +1,3 @@
 class AuthenticatedController < ApplicationController
-  include Authenticatable
+  include Authenticable
 end
