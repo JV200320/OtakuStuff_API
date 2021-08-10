@@ -15,7 +15,11 @@ class User < ActiveRecord::Base
   end
 
   def following?(other_user)
-    relationships.find_by(followed_id: other_user.id)
+    if relationships.find_by(followed_id: other_user.id).nil?
+      false
+    else
+      true
+    end
   end
 
   def unfollow!(other_user)

@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   namespace :interactions do
     patch 'favorites/:id/add/:anime_id', to: 'favorites#add_favorite'
     patch 'favorites/:id/remove/:anime_id', to: 'favorites#remove_favorite'
+    post 'follow/:id', to: 'follows#create'
+    delete 'unfollow/:id', to: 'follows#destroy'
   end
 
 end
