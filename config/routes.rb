@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     get '/:anime_id', to: 'animes#show'
   end
 
-  get ':id/favorites', to: 'favorites#index'
+  get 'favorites/:id', to: 'favorites#index'
 
   namespace :interactions do
     patch 'favorites/:id/add/:anime_id', to: 'favorites#add_favorite'
