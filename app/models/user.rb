@@ -10,6 +10,10 @@ class User < ActiveRecord::Base
   has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
 
+  has_one_attached :avatar
+
+  after_create :attach_default_image
+
   def follow!(other_user)
     relationships.create!(followed_id: other_user.id)
   end
@@ -26,4 +30,9 @@ class User < ActiveRecord::Base
     relationships.find_by_followed_id(other_user.id).destroy
   end
 
+  def attach_default_image
+    path_image = 'public/images/default_profile/doggo.jpg'
+    self.avatar.attach(io: File.open(path_image), filename: 'doggo.jpg') unless self.avatar.attached?
+  end
+  
 end
