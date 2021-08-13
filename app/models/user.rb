@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   has_one_attached :avatar
 
-  after_create :attach_default_image
+  after_create :attach_avatar
 
   def follow!(other_user)
     relationships.create!(followed_id: other_user.id)
@@ -30,9 +30,14 @@ class User < ActiveRecord::Base
     relationships.find_by_followed_id(other_user.id).destroy
   end
 
-  def attach_default_image
-    path_image = 'public/images/default_profile/doggo.jpg'
-    self.avatar.attach(io: File.open(path_image), filename: 'doggo.jpg') unless self.avatar.attached?
+  def attach_avatar
+    path_avatar = 'public/images/default_profile/doggo.jpg'
+    if self.image.nil?
+      self.avatar.attach(io: File.open(path_avatar), filename: 'doggo.jpg')
+    else
+      image = open(self.image)
+      self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
+    end
   end
   
 end
