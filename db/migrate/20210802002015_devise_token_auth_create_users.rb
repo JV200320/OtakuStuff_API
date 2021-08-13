@@ -33,7 +33,7 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[6.1]
       t.string :image
       t.string :email
       t.text :favorites, array: true, default: []
-      t.text :bio
+      t.text :bio, default: 'Ainda não tenho uma bio.'
 
 
       ## Tokens

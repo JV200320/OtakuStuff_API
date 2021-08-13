@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 2021_08_10_215917) do
     t.string "image"
     t.string "email"
     t.text "favorites", default: [], array: true
-    t.text "bio"
+    t.text "bio", default: "Ainda não tenho uma bio."
     t.json "tokens"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

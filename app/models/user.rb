@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   after_create :attach_avatar
   before_update :update_avatar, :if => :image_changed?
 
-  validates :nickname, :email, presence: true
+  validates :nickname, :email, :bio, presence: true
   validates :nickname, uniqueness: true
 
   def follow!(other_user)
