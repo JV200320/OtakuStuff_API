@@ -15,6 +15,9 @@ class User < ActiveRecord::Base
   after_create :attach_avatar
   before_update :update_avatar, :if => :image_changed?
 
+  validates :nickname, :email, presence: true
+  validates :nickname, uniqueness: true
+
   def follow!(other_user)
     relationships.create!(followed_id: other_user.id)
   end
@@ -42,7 +45,6 @@ class User < ActiveRecord::Base
   end
 
   def update_avatar
-    byebug
     image = open(self.image)
     self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
   end
