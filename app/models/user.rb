@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'open-uri'
 class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_one_attached :avatar
 
   after_create :attach_avatar
+  before_update :update_avatar, :if => :image_changed?
 
   def follow!(other_user)
     relationships.create!(followed_id: other_user.id)
@@ -39,5 +40,11 @@ class User < ActiveRecord::Base
       self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
     end
   end
-  
+
+  def update_avatar
+    byebug
+    image = open(self.image)
+    self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
+  end
+
 end
