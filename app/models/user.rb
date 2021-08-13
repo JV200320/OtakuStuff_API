@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'open-uri'
 class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -9,6 +9,14 @@ class User < ActiveRecord::Base
   has_many :followed_users, through: :relationships, source: :followed
   has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
+
+  has_one_attached :avatar
+
+  after_create :attach_avatar
+  before_update :update_avatar, :if => :image_changed?
+
+  validates :nickname, :email, presence: true
+  validates :nickname, uniqueness: true
 
   def follow!(other_user)
     relationships.create!(followed_id: other_user.id)
@@ -24,6 +32,21 @@ class User < ActiveRecord::Base
 
   def unfollow!(other_user)
     relationships.find_by_followed_id(other_user.id).destroy
+  end
+
+  def attach_avatar
+    path_avatar = 'public/images/default_profile/doggo.jpg'
+    if self.image.nil?
+      self.avatar.attach(io: File.open(path_avatar), filename: 'doggo.jpg')
+    else
+      image = open(self.image)
+      self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
+    end
+  end
+
+  def update_avatar
+    image = open(self.image)
+    self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
   end
 
 end
