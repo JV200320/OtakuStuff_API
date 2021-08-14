@@ -10,10 +10,13 @@ class User < ActiveRecord::Base
   has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
 
+  has_many :posts, dependent: :destroy
+  has_many :likes, dependent: :destroy
+
   has_one_attached :avatar
 
   after_create :attach_avatar
-  before_update :update_avatar, :if => :image_changed?
+  before_update :update_avatar, if: -> {image_changed?}
 
   validates :nickname, :email, :bio, presence: true
   validates :nickname, uniqueness: true
@@ -48,5 +51,21 @@ class User < ActiveRecord::Base
     image = open(self.image)
     self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
   end
+
+  def like_post(post)
+    if Like.find_by(post_id: post.id, user_id: id).nil?
+      if post.user_id != id
+        likes.create(post_id: post.id)
+      end
+    end
+  end
+  
+  def undo_like_post(post)
+    like = Like.find_by(post_id: post.id, user_id: id)
+    unless like.nil?
+      like.destroy
+    end
+  end
+  
 
 end
