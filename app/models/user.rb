@@ -10,8 +10,8 @@ class User < ActiveRecord::Base
   has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
 
-  has_many :posts, dependent: :destroy
-  has_many :likes, dependent: :destroy
+  has_many :anime_posts, dependent: :destroy
+  has_many :anime_likes, dependent: :destroy
 
   has_one_attached :avatar
 
@@ -22,7 +22,9 @@ class User < ActiveRecord::Base
   validates :nickname, uniqueness: true
 
   def follow!(other_user)
-    relationships.create!(followed_id: other_user.id)
+    if other_user != self
+      relationships.create!(followed_id: other_user.id)
+    end
   end
 
   def following?(other_user)
@@ -52,16 +54,16 @@ class User < ActiveRecord::Base
     self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
   end
 
-  def like_post(post)
-    if Like.find_by(post_id: post.id, user_id: id).nil?
-      if post.user_id != id
-        likes.create(post_id: post.id)
+  def anime_like_post(anime_post)
+    if AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id).nil?
+      if anime_post.user_id != id
+        anime_likes.create(anime_post_id: anime_post.id)
       end
     end
   end
   
-  def undo_like_post(post)
-    like = Like.find_by(post_id: post.id, user_id: id)
+  def undo_anime_like_post(anime_post)
+    like = AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id)
     unless like.nil?
       like.destroy
     end

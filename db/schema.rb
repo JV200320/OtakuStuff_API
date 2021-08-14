@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_14_132256) do
+ActiveRecord::Schema.define(version: 2021_08_14_155831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,22 +43,30 @@ ActiveRecord::Schema.define(version: 2021_08_14_132256) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "likes", force: :cascade do |t|
-    t.bigint "post_id", null: false
+  create_table "anime_likes", force: :cascade do |t|
+    t.bigint "anime_post_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_id"], name: "index_likes_on_post_id"
-    t.index ["user_id"], name: "index_likes_on_user_id"
+    t.index ["anime_post_id"], name: "index_anime_likes_on_anime_post_id"
+    t.index ["user_id"], name: "index_anime_likes_on_user_id"
   end
 
-  create_table "posts", force: :cascade do |t|
+  create_table "anime_posts", force: :cascade do |t|
     t.text "content"
     t.bigint "user_id", null: false
     t.integer "anime_id"
+    t.integer "kind", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.index ["user_id"], name: "index_anime_posts_on_user_id"
+  end
+
+  create_table "anime_replies", force: :cascade do |t|
+    t.integer "comment_id"
+    t.integer "reply_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "relationships", force: :cascade do |t|
@@ -96,7 +104,7 @@ ActiveRecord::Schema.define(version: 2021_08_14_132256) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "likes", "posts"
-  add_foreign_key "likes", "users"
-  add_foreign_key "posts", "users"
+  add_foreign_key "anime_likes", "anime_posts"
+  add_foreign_key "anime_likes", "users"
+  add_foreign_key "anime_posts", "users"
 end
