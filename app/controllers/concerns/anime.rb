@@ -39,6 +39,5 @@ module Anime
     end
     search
   end
-  
 
 end
