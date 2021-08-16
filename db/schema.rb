@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_14_155831) do
+ActiveRecord::Schema.define(version: 2021_08_16_140313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,52 @@ ActiveRecord::Schema.define(version: 2021_08_14_155831) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "page_likes", force: :cascade do |t|
+    t.bigint "page_post_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["page_post_id"], name: "index_page_likes_on_page_post_id"
+    t.index ["user_id"], name: "index_page_likes_on_user_id"
+  end
+
+  create_table "page_posts", force: :cascade do |t|
+    t.bigint "page_id", null: false
+    t.text "content"
+    t.bigint "user_id", null: false
+    t.integer "kind", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["page_id"], name: "index_page_posts_on_page_id"
+    t.index ["user_id"], name: "index_page_posts_on_user_id"
+  end
+
+  create_table "page_relationships", force: :cascade do |t|
+    t.bigint "page_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["page_id"], name: "index_page_relationships_on_page_id"
+    t.index ["user_id"], name: "index_page_relationships_on_user_id"
+  end
+
+  create_table "page_replies", force: :cascade do |t|
+    t.integer "comment_id"
+    t.integer "reply_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "pages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "image"
+    t.string "title"
+    t.text "description", default: "Ainda não temos uma descrição."
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_pages_on_user_id"
+  end
+
   create_table "relationships", force: :cascade do |t|
     t.integer "follower_id"
     t.integer "followed_id"
@@ -107,4 +153,11 @@ ActiveRecord::Schema.define(version: 2021_08_14_155831) do
   add_foreign_key "anime_likes", "anime_posts"
   add_foreign_key "anime_likes", "users"
   add_foreign_key "anime_posts", "users"
+  add_foreign_key "page_likes", "page_posts"
+  add_foreign_key "page_likes", "users"
+  add_foreign_key "page_posts", "pages"
+  add_foreign_key "page_posts", "users"
+  add_foreign_key "page_relationships", "pages"
+  add_foreign_key "page_relationships", "users"
+  add_foreign_key "pages", "users"
 end
