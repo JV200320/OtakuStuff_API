@@ -1,20 +1,15 @@
 module Interactions
-  class AnimePostsController < AuthenticatedController
-    include Anime
-
+  class PagePostsController < AuthenticatedController
+    
     def create
-      res = get_anime("/anime/#{params['anime_id']}")
-      if res.key?("error")
-        render json: {error: res['error']}
-        return
-      end
-      AnimePost.create(content: params['content'], anime_id: params['anime_id'], user_id: current_user['id'])
+      return render json: {error: "Page id not found."} if Page.find(params['page_id']).nil?
+      PagePost.create(content: params['content'], page_id: params['page_id'], user_id: current_user['id'])
       render json: {success: true}
     end
     
     def destroy
       begin
-        post = AnimePost.find(params['post_id'])
+        post = PagePost.find(params['post_id'])
       rescue
         render json: {error: "No post with this id"}
         return
@@ -27,7 +22,7 @@ module Interactions
 
     def update
       begin
-        post = AnimePost.find(params['post_id'])
+        post = PagePost.find(params['post_id'])
       rescue
         render json: {error: "No post with this id"}
         return
@@ -40,12 +35,12 @@ module Interactions
       end
       render json: {error: "This post is too old to be edited"}
     end
-    
+
     def reply
-      post = AnimePost.find(params['post_id'])
+      post = PagePost.find(params['post_id'])
       post.reply(current_user, params['content'])
     end
-
+    
 
   end
 end

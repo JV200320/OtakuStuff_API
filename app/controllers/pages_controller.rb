@@ -13,4 +13,10 @@ class PagesController < ApplicationController
     end
   end
 
+  def followers
+    page = Page.find(params['id'])
+    @followers = page.followers
+  end
+  
+
 end

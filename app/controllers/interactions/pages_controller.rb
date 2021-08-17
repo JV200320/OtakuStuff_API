@@ -2,11 +2,12 @@ module Interactions
   class PagesController < AuthenticatedController
     
     def create
-      if params['image'] && !params['image'].nil?
-        Page.create!(user_id: current_user['id'], title: params['title'], image: params['image'],description: params['description'])
-        return
-      end
-      Page.create!(user_id: current_user['id'], title: params['title'], description: params['description'])
+      page = Page.new
+      page['title'] = params['title'] if params.key?(:title) && !params['title'].nil?
+      page['image'] = params['image'] if params.key?(:image) && !params['image'].nil?
+      page['description'] = params['description'] if params.key?(:description) && !params['description'].nil?
+      page['user_id'] = current_user['id']
+      page.save!
     end
     
     def update

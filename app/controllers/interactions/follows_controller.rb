@@ -17,5 +17,19 @@ module Interactions
       end
     end
     
+    def page_create
+      page = Page.find(params['id'])
+      return if page.nil?
+
+      current_user.follow_page!(page) unless current_user.following_page?(page)
+    end
+    
+    def page_destroy
+      page = Page.find(params['id'])
+      unless page.nil?
+        current_user.unfollow_page!(page) if current_user.following_page?(page)
+      end
+    end
+    
   end
 end
