@@ -3,8 +3,11 @@ module Animes
     include Anime
   
     def index
-      @animes = get_anime("/top/anime")['top']
-      render "animes/index"
+      page = nil
+      page = params['page'] unless params['page'].nil?
+      url = page.nil? ? "/top/anime" : "/top/anime/#{page}"
+      @animes = get_anime(url)['top']
+      render "animes/index.json.jbuilder"
     end
     
     def show
