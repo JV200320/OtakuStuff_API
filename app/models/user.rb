@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
 
   # Attach avatar after create and before update
   after_create :attach_avatar
-  before_update :update_avatar, if: -> {image_changed?}
+  before_update :update_avatar, if: -> { image_changed? }
 
   # Validations
   validates :nickname, :email, :bio, presence: true
@@ -79,50 +79,41 @@ class User < ActiveRecord::Base
   # Method to attach avatar after create
   def attach_avatar
     path_avatar = 'public/images/default_profile/doggo.jpg'
-    if self.image.nil?
-      self.avatar.attach(io: File.open(path_avatar), filename: 'doggo.jpg')
+    if image.nil?
+      avatar.attach(io: File.open(path_avatar), filename: 'doggo.jpg')
     else
       image = open(self.image)
-      self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
+      avatar.attach(io: image, filename: "#{nickname}.jpg")
     end
   end
 
   # Method to update attached avatar before update
   def update_avatar
     image = open(self.image)
-    self.avatar.attach(io: image, filename: "#{self.nickname}.jpg")
+    avatar.attach(io: image, filename: "#{nickname}.jpg")
   end
 
   # Method to like and undo like on anime posts
   def anime_like_post(anime_post)
-    if AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id).nil?
-      if anime_post.user_id != id
-        anime_likes.create(anime_post_id: anime_post.id)
-      end
+    if AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id).nil? && (anime_post.user_id != id)
+      anime_likes.create(anime_post_id: anime_post.id)
     end
   end
 
   def undo_anime_like_post(anime_post)
     like = AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id)
-    unless like.nil?
-      like.destroy
-    end
+    like.destroy unless like.nil?
   end
 
   # Method to like and undo like on page posts
   def page_like_post(page_post)
-    if PageLike.find_by(page_post_id: page_post.id, user_id: id).nil?
-      if page_post.user_id != id
-        page_likes.create(page_post_id: page_post.id)
-      end
+    if PageLike.find_by(page_post_id: page_post.id, user_id: id).nil? && (page_post.user_id != id)
+      page_likes.create(page_post_id: page_post.id)
     end
   end
 
   def undo_page_like_post(page_post)
     like = PageLike.find_by(page_post_id: page_post.id, user_id: id)
-    unless like.nil?
-      like.destroy
-    end
+    like.destroy unless like.nil?
   end
-
 end

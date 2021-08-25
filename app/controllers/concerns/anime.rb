@@ -28,6 +28,7 @@ module Anime
   def set_search(values)
     items = 1
     search = '?'
+    values = JSON.parse(values)
     values.each do |k,v|
       if items == 1
         search+= "#{k}=#{v}"

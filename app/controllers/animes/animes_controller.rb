@@ -24,7 +24,7 @@ module Animes
         end
       end
       @animes = get_anime("/search/anime", search)['results']
-      render "animes/index"
+      render "animes/index.json.jbuilder"
     end
   end
 end
