@@ -26,9 +26,6 @@ class User < ActiveRecord::Base
   # Profile avatar
   has_one_attached :avatar
 
-  # Attach avatar before update
-  before_update :update_avatar, if: -> { image_changed? }
-
   # Validations
   validates :nickname, :email, :bio, presence: true
   validates :nickname, uniqueness: true
