@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'open-uri'
-
 # User class
 class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
@@ -28,8 +26,7 @@ class User < ActiveRecord::Base
   # Profile avatar
   has_one_attached :avatar
 
-  # Attach avatar after create and before update
-  after_create :attach_avatar
+  # Attach avatar before update
   before_update :update_avatar, if: -> { image_changed? }
 
   # Validations
@@ -77,13 +74,12 @@ class User < ActiveRecord::Base
   end
 
   # Method to attach avatar after create
-  def attach_avatar
+  def attach_avatar(file)
     path_avatar = 'public/images/default_profile/doggo.jpg'
-    if image.nil?
+    if image.nil? || file.class != ActionDispatch::Http::UploadedFile
       avatar.attach(io: File.open(path_avatar), filename: 'doggo.jpg')
     else
-      image = open(self.image)
-      avatar.attach(io: image, filename: "#{nickname}.jpg")
+      avatar.attach(io: file, filename: "#{nickname}.jpg")
     end
   end
 
@@ -114,6 +110,8 @@ class User < ActiveRecord::Base
 
   def undo_page_like_post(page_post)
     like = PageLike.find_by(page_post_id: page_post.id, user_id: id)
-    like.destroy unless like.nil?
+    like.destro
+
+    require 'open-uri'y unless like.nil?
   end
 end
