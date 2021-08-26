@@ -84,34 +84,31 @@ class User < ActiveRecord::Base
   end
 
   # Method to update attached avatar before update
-  def update_avatar
-    image = open(self.image)
-    avatar.attach(io: image, filename: "#{nickname}.jpg")
+  def update_avatar(file)
+    avatar.attach(io: file, filename: "#{nickname}.jpg")
   end
 
   # Method to like and undo like on anime posts
   def anime_like_post(anime_post)
-    if AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id).nil? && (anime_post.user_id != id)
-      anime_likes.create(anime_post_id: anime_post.id)
-    end
+    return if AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id).nil? && (anime_post.user_id != id)
+
+    anime_likes.create(anime_post_id: anime_post.id)
   end
 
   def undo_anime_like_post(anime_post)
     like = AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id)
-    like.destroy unless like.nil?
+    like&.destroy
   end
 
   # Method to like and undo like on page posts
   def page_like_post(page_post)
-    if PageLike.find_by(page_post_id: page_post.id, user_id: id).nil? && (page_post.user_id != id)
-      page_likes.create(page_post_id: page_post.id)
-    end
+    return if PageLike.find_by(page_post_id: page_post.id, user_id: id).nil? && (page_post.user_id != id)
+
+    page_likes.create(page_post_id: page_post.id)
   end
 
   def undo_page_like_post(page_post)
     like = PageLike.find_by(page_post_id: page_post.id, user_id: id)
-    like.destro
-
-    require 'open-uri'y unless like.nil?
+    like&.destroy
   end
 end
