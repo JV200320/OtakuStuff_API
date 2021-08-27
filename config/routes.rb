@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'users/search'
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     registrations: 'override/registrations'
   }
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
   get 'pages', to: 'pages#index'
   get 'pages/search', to: 'pages#search'
   get 'pages/followers/:id', to: 'pages#followers'
+  get 'users/search', to: 'users#search'
 
   namespace :interactions do
     patch 'favorites/:id/add/:anime_id', to: 'favorites#add_favorite'
