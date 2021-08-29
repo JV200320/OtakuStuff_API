@@ -1,3 +1,5 @@
+require 'json'
+
 module Interactions
   class FavoritesController < AuthenticatedController
     include Anime
@@ -19,7 +21,7 @@ module Interactions
     def remove_favorite
       @user = User.find(params['id'])
       if current_user == @user
-        @user['favorites'].delete(params['anime_id'])
+        @user['favorites'].delete_if { |json| JSON.parse(json)['mal_id'] == params['anime_id'].to_i}
         save_user!
       end
     end
