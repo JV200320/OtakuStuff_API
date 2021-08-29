@@ -7,9 +7,10 @@ module Interactions
       if res.key?("error")
         render json: {error: res['error']}
       else
+        res = {mal_id: res['mal_id'], image_url: res['image_url'], title: res['title']}.to_json
         @user = User.find(params['id'])
-        if current_user == @user && !@user['favorites'].include?(params['anime_id'])
-          @user['favorites'].push(params['anime_id'])
+        if current_user == @user && !@user['favorites'].include?(res)
+          @user['favorites'].push(res)
           save_user!
         end
       end
