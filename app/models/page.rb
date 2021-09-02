@@ -1,4 +1,3 @@
-require 'open-uri'
 class Page < ApplicationRecord
   belongs_to :user
 
@@ -8,18 +7,14 @@ class Page < ApplicationRecord
 
   has_one_attached :page_image
 
-  validates :title, presence: true
+  validates :title, :owner_nickname, presence: true
 
-  after_create :attach_image
   before_update :update_image, if: -> { image_changed? }
 
-  def attach_image
-    path_page_image = 'public/images/default_profile/doggo.jpg'
-    if self.image.nil?
-      self.page_image.attach(io: File.open(path_page_image), filename: 'doggo.jpg')
-    else
-      page_image = open(self.image)
-      self.page_image.attach(io: page_image, filename: "#{self.nickname}.jpg")
+  def attach_image(file)
+    unless file.class != ActionDispatch::Http::UploadedFile
+      page_image.attach(io: file, filename: "#{self.nickname}.jpg")
+      image = url_for(page_image)
     end
   end
 

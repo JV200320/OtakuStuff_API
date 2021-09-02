@@ -72,10 +72,7 @@ class User < ActiveRecord::Base
 
   # Method to attach avatar after create
   def attach_avatar(file)
-    path_avatar = 'public/images/default_profile/doggo.jpg'
-    if image.nil? || file.class != ActionDispatch::Http::UploadedFile
-      avatar.attach(io: File.open(path_avatar), filename: 'doggo.jpg')
-    else
+    unless image.nil? || file.class != ActionDispatch::Http::UploadedFile
       avatar.attach(io: file, filename: "#{nickname}.jpg")
     end
   end

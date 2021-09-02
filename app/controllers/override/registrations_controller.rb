@@ -3,7 +3,8 @@ class Override::RegistrationsController < DeviseTokenAuth::RegistrationsControll
   def create
     super do |resource|
       resource.attach_avatar(params['image'])
-      resource.update(image: url_for(resource.avatar))
+      url = url_for(resource.avatar) if resource.avatar.attached?
+      resource.update(image: url)
     end
   end
 end

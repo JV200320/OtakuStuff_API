@@ -11,12 +11,12 @@ class PagesController < ApplicationController
     Page.all.each do |page|
       @results.push(page) if page['title'].downcase.include?(search.downcase) || page['description'].downcase.include?(search.downcase)
     end
+    render 'pages/search.json.jbuilder'
   end
 
   def followers
     page = Page.find(params['id'])
     @followers = page.followers
   end
-  
 
 end
