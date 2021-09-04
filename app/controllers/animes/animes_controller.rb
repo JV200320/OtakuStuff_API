@@ -12,7 +12,7 @@ module Animes
     
     def show
       @anime = get_anime("/anime/#{params['anime_id']}")
-      render "animes/show"
+      render "animes/show.json.jbuilder"
     end
     
     def search
