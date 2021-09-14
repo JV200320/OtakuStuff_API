@@ -12,7 +12,7 @@ module Interactions
         res = {mal_id: res['mal_id'], image_url: res['image_url'], title: res['title']}.to_json
         @user = User.find(params['id'])
         if current_user == @user && !@user['favorites'].include?(res)
-          @user['favorites'].push(res)
+          @user['favorites'].unshift(res)
           save_user!
         end
       end
