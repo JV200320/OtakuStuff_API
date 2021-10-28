@@ -1,5 +1,4 @@
 module Anime
-
   extend ActiveSupport::Concern
 
   included do
@@ -12,15 +11,8 @@ module Anime
 
   def get_anime(url, values = nil)
     search = values.nil? ? '' : set_search(values)
-    if search.length > 1
-      uri = URI(@@base_url+url+search)
-      res = JSON.parse(Net::HTTP.get(uri))
-      return res
-    else
-      uri = URI(@@base_url+url)
-      res = JSON.parse(Net::HTTP.get(uri))
-      return res
-    end
+    uri = search.length > 1 ? URI(@@base_url + url + search) : URI(@@base_url + url)
+    JSON.parse(Net::HTTP.get(uri))
   end
 
   private
@@ -29,16 +21,14 @@ module Anime
     items = 1
     search = '?'
     values = JSON.parse(values)
-    values.each do |k,v|
+    values.each do |k, v|
       if items == 1
-        search+= "#{k}=#{v}"
-        items+=1
+        search += "#{k}=#{v}"
+        items += 1
       else
-        search+= "&#{k}=#{v}"
-        items+=1
+        search += "&#{k}=#{v}"
       end
     end
     search
   end
-
 end

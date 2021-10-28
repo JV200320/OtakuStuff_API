@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
   def search
-    @users = User.all.where("nickname ILIKE '%#{params['search']}%'")
-    render 'users/search.json.jbuilder'
+    @users = User.all.where("nickname ILIKE '%#{params['q']}%'")
+    render 'users/search'
   end
 
 end

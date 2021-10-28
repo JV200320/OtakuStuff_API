@@ -32,11 +32,15 @@ Rails.application.routes.draw do
     post 'anime/post/reply/:post_id', to: 'anime_posts#reply'
     delete 'anime/post/:post_id', to: 'anime_posts#destroy'
     patch 'anime/post/:post_id', to: 'anime_posts#update'
+    post 'anime/post/like/:post_id', to: 'anime_posts#like'
+    post 'anime/post/unlike/:post_id', to: 'anime_posts#unlike'
     
     post 'page/post/:page_id', to: 'page_posts#create'
     post 'page/post/reply/:post_id', to: 'page_posts#reply'
     delete 'page/post/:post_id', to: 'page_posts#destroy'
     patch 'page/post/:post_id', to: 'page_posts#update'
+    post 'page/post/like/:post_id', to: 'page_posts#like'
+    post 'page/post/unlike/:post_id', to: 'page_posts#unlike'
 
     post 'pages', to: 'pages#create'
     delete 'pages/:page_id', to: 'pages#destroy'

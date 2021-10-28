@@ -14,6 +14,8 @@ class AnimePost < ApplicationRecord
 
   validates :anime_id, presence: true, if: -> {kind == 0}
 
+  validates :user_nickname, presence: true
+
   validates :content, presence: true, if: ->  {!medias.attached?}
 
   def reply(user, content)

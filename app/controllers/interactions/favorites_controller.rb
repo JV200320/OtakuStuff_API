@@ -31,7 +31,7 @@ module Interactions
     def save_user!
       @user.save!
       @user.reload
-      render 'interactions/update_favorite.json.jbuilder'
+      render 'interactions/update_favorite'
     rescue => e
       render json: {error: e}
     end

@@ -8,7 +8,10 @@ module Interactions
         render json: {error: res['error']}
         return
       end
-      AnimePost.create(content: params['content'], anime_id: params['anime_id'], user_id: current_user['id'])
+      animepost = AnimePost.create(content: params['content'], anime_id: params['anime_id'],
+                       user_id: current_user['id'], user_nickname: current_user['nickname'],
+                       user_image_url: url_for(current_user.avatar))
+      animepost.save!
       render json: {success: true}
     end
     
@@ -44,6 +47,18 @@ module Interactions
     def reply
       post = AnimePost.find(params['post_id'])
       post.reply(current_user, params['content'])
+    end
+
+    def like
+      post = AnimePost.find(params['post_id'])
+      current_user.anime_like_post(post)
+      render json: {success: true}
+    end
+    
+    def unlike
+      post = AnimePost.find(params['post_id'])
+      current_user.undo_anime_like_post(post)
+      render json: {success: true}
     end
 
 

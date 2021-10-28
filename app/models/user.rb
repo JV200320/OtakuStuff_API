@@ -86,7 +86,8 @@ class User < ActiveRecord::Base
   def anime_like_post(anime_post)
     return if AnimeLike.find_by(anime_post_id: anime_post.id, user_id: id).nil? && (anime_post.user_id != id)
 
-    anime_likes.create(anime_post_id: anime_post.id)
+    AnimeLike.create(anime_post_id: anime_post.id)
+    # anime_likes.create(anime_post_id: anime_post.id)
   end
 
   def undo_anime_like_post(anime_post)
